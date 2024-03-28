@@ -1,4 +1,3 @@
-
 cmake_minimum_required(VERSION 3.5)
 project(integrity_toolkit LANGUAGES CXX C VERSION 3.2.0)
 
@@ -7,11 +6,10 @@ message (STATUS "${PROJECT_NAME} version ${PROJECT_VERSION}")
 option(BUILD_KIT "Build kit?" false)
 option(BUILD_TESTS "Build tests?" false)
 
-set(as_subproject logutils if_utils pnt_integrity )
+set(as_subproject logutils if_utils pnt_integrity)
 if(BUILD_KIT)
-  set(as_subproject logutils if_utils pnt_integrity integrity_ui_base serial 
-  ublox yaml_parser usrp_utilities cf_display)
-endif(BUILD_KIT)
+  list(APPEND as_subproject integrity_ui_base serial ublox yaml_parser usrp_utilities cf_display)
+endif()
 
 # Allow dependencies to be found when added using add_subdirectory
 # https://gitlab.kitware.com/cmake/cmake/issues/17735
@@ -22,13 +20,17 @@ macro(find_package)
 endmacro()
 
 # build packages
-add_subdirectory(PNT-Integrity/is4s_common/logutils)
-add_subdirectory(PNT-Integrity/if_data_utils)
-add_subdirectory(PNT-Integrity/pnt_integrity/pnt_integrity)
+foreach(subproject ${as_subproject})
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${subproject}")
+        add_subdirectory(${subproject})
+    else()
+        message(STATUS "Skipping ${subproject} because it does not exist.")
+    endif()
+endforeach()
 
-if (BUILD_TESTS)
+if(BUILD_TESTS)
   add_subdirectory(PNT-Integrity/pnt_integrity/pnt_integrity_tests)
-endif (BUILD_TESTS)
+endif(BUILD_TESTS)
 
 if(BUILD_KIT)
   add_subdirectory(integrity_ui/integrity_ui_base)
