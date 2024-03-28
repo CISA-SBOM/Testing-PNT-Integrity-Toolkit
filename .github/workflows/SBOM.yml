@@ -11,7 +11,12 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Install CMake and Build Tools
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install CMake
       run: |
         sudo apt-get update
         sudo apt-get install -y cmake
@@ -25,8 +30,7 @@ jobs:
 
     - name: Install cpp-dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y cpp-dependencies
+        pip install cpp-dependencies
 
     - name: Run cpp-dependencies
       run: cpp-dependencies
