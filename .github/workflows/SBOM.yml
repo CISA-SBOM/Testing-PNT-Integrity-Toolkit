@@ -11,8 +11,10 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Set up CMake and Build Tools
-      uses: actions/setup-cmake@v1
+    - name: Install CMake and Build Tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake
 
     - name: Build C++ Project
       run: |
