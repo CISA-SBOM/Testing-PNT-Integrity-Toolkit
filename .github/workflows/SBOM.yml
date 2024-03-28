@@ -1,0 +1,30 @@
+name: Analyze C++ Project Dependencies
+
+on:
+  workflow_dispatch: # This triggers the workflow when manually requested
+
+jobs:
+  analyze_dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up CMake and Build Tools
+      uses: actions/setup-cmake@v1
+
+    - name: Build C++ Project
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+        cmake --build .
+
+    - name: Install cpp-dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cpp-dependencies
+
+    - name: Run cpp-dependencies
+      run: cpp-dependencies
